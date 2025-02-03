@@ -30,4 +30,24 @@ public class ItemsService {
     return itemsRepository.findAll();
   }
 
+  public Optional<ItemsModel> findById(Long id) {
+    return itemsRepository.findById(id);
+  }
+
+  public Optional<ItemsModel> updateItem(Long id, ItemDTO dto) {
+    if (!itemsRepository.existsById(id)) {
+      return Optional.empty();
+    }
+
+    Optional<ItemsModel> item = itemsRepository.findByName(dto.getName());
+    if (item.isPresent()) {
+      return item;
+    }
+
+    ItemsModel newItem = new ItemsModel(dto);
+    newItem.setId(id);
+    itemsRepository.save(newItem);
+    return Optional.of(newItem);
+  }
+
 }
