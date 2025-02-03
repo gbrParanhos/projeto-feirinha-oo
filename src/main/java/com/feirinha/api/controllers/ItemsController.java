@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,7 @@ public class ItemsController {
   }
 
   @PostMapping()
-  public ResponseEntity<Object> postUser(@RequestBody @Valid ItemDTO body) {
+  public ResponseEntity<Object> postItem(@RequestBody @Valid ItemDTO body) {
     Optional<ItemsModel> item = itemsService.saveItem(body);
 
     if (!item.isPresent()) {
@@ -40,12 +41,12 @@ public class ItemsController {
   }
 
   @GetMapping()
-  public ResponseEntity<Object> getUsers() {
+  public ResponseEntity<Object> getItems() {
     return ResponseEntity.status(HttpStatus.OK).body(itemsService.findAll());
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Object> getMethodName(@PathVariable("id") Long id) {
+  public ResponseEntity<Object> getItemById(@PathVariable("id") Long id) {
     Optional<ItemsModel> item = itemsService.findById(id);
 
     if (!item.isPresent()) {
@@ -66,6 +67,15 @@ public class ItemsController {
     }
 
     return ResponseEntity.status(HttpStatus.OK).body(item.get());
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Object> deleteItem(@PathVariable Long id) {
+    Optional<ItemsModel> item = itemsService.deleteItem(id);
+    if (!item.isPresent()) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi encontrado um item com este id.");
+    }
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
 }

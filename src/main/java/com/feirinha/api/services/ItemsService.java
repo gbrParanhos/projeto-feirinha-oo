@@ -50,4 +50,13 @@ public class ItemsService {
     return Optional.of(newItem);
   }
 
+  public Optional<ItemsModel> deleteItem(Long id) {
+    Optional<ItemsModel> item = itemsRepository.findById(id);
+    if (!item.isPresent()) {
+      return Optional.empty();
+    }
+    itemsRepository.deleteById(id);
+    return item;
+  }
+
 }
